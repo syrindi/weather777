@@ -55,6 +55,12 @@ def makeYqlQuery(req):
     city = parameters.get("geo-city")
     if city is None:
         return None
+    
+    
+    my_action = req.get("request").get("action")
+    my_previous_action == parameters.get("my-action")
+    if my_action == "PreviousContent":
+        my_action == my_previous_action
 
     return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
 
