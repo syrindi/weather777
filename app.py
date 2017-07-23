@@ -26,7 +26,7 @@ def makeWebhookResult():
   
 
     return {
-{
+
   "google": {
   "expect_user_response": true,
   "rich_response": {
@@ -72,7 +72,7 @@ def makeWebhookResult():
   ]
 }
 }
-}
+
     }
 
 
