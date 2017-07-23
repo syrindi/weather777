@@ -70,9 +70,9 @@ def makeYqlQuery(req):
 #def makeWebhookResult(data, yql_url):
 def makeWebhookResult(yql_url):
 
-    query = data.get('query')
-    if query is None:
-        return {}
+    #query = data.get('query')
+   # if query is None:
+      #  return {}
 
     #result = query.get('results')
     #if result is None:
