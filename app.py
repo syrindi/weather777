@@ -90,8 +90,10 @@ def makeWebhookResult(data, yql_url):
 
     # print(json.dumps(item, indent=4))
 
-    speech = "Howdy There!."+  yql_url  +"Today in " + location.get('city') + ": " + condition.get('text') + \
-             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+    #speech = "Howdy There!."+  yql_url  +"Today in " + location.get('city') + ": " + condition.get('text') + \
+          #   ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+        
+    speech = yql_url
 
     print("Response:")
     print(speech)
