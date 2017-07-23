@@ -58,7 +58,7 @@ def makeYqlQuery(req):
     
     
     my_action = req.get("result").get("action")
-    my_previous_action == parameters.get("my-action")
+    my_previous_action = parameters.get("my-action")
     if my_action == "PreviousContent":
         my_action = my_previous_action
 
