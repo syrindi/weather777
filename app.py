@@ -91,7 +91,7 @@ def makeWebhookResult(data):
     print(speech)
     
     
-    data = '{
+    data = {
   "items": [
     {
       "simpleResponse": {
@@ -132,7 +132,7 @@ def makeWebhookResult(data):
     {"title":"Carousel"},
     {"title":"Suggestions"}
   ]
-}'
+}
     
 
     return {
