@@ -105,7 +105,7 @@ def makeWebhookResult(data):
         "subtitle":
         "This is a subtitle",
         "image": {
-          "url":"https://static.pexels.com/photos/59523/pexels-photo-59523.jpeg",
+          "url":"https://image.freepik.com/free-icon/apple-logo_318-40184.jpg",
           "accessibilityText":"Image alternate text"
         },
         "buttons": [
