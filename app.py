@@ -105,7 +105,7 @@ def makeWebhookResult(data):
         "subtitle":
         "This is a subtitle",
         "image": {
-          "url":"https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png",
+          "url":"https://static.pexels.com/photos/59523/pexels-photo-59523.jpeg",
           "accessibilityText":"Image alternate text"
         },
         "buttons": [
