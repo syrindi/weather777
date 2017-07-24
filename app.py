@@ -1,78 +1,73 @@
-#!/usr/bin/env python
+    res = processRequest(req)
 
-from __future__ import print_function
-from future.standard_library import install_aliases
-install_aliases()
-
-from urllib.parse import urlparse, urlencode
-from urllib.request import urlopen, Request
-from urllib.error import HTTPError
-
-import json
-import os
-
-from flask import Flask
-from flask import request
-from flask import make_response
-
-# Flask app should start in global layout
-app = Flask(__name__)
+    res = json.dumps(res, indent=4)
+    # print(res)
+    r = make_response(res)
+    r.headers['Content-Type'] = 'application/json'
+    return r
 
 
-@app.route('/webhook', methods=['POST'])
+def processRequest(req):
+    if req.get("result").get("action") != "yahooWeatherForecast":
+        return {}
+    baseurl = "https://query.yahooapis.com/v1/public/yql?"
+    yql_query = makeYqlQuery(req)
+    if yql_query is None:
+        return {}
+    yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
+    res = makeWebhookResult(data)
+    return res
 
-def makeWebhookResult():
 
-  
+def makeYqlQuery(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    city = parameters.get("geo-city")
+    if city is None:
+        return None
+
+    return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
+
+
+def makeWebhookResult(data):
+    query = data.get('query')
+    if query is None:
+        return {}
+
+    result = query.get('results')
+    if result is None:
+        return {}
+
+    channel = result.get('channel')
+    if channel is None:
+        return {}
+
+    item = channel.get('item')
+    location = channel.get('location')
+    units = channel.get('units')
+    if (location is None) or (item is None) or (units is None):
+        return {}
+
+    condition = item.get('condition')
+    if condition is None:
+        return {}
+
+    # print(json.dumps(item, indent=4))
+
+    speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
+             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+
+    print("Response:")
+    print(speech)
 
     return {
-
-  "google": {
-  "expect_user_response": true,
-  "rich_response": {
-  "items": [
-    {
-      "simpleResponse": {
-          "textToSpeech":"This is the first simple response for a basic card"
-      }
-    },
-    {
-      "basicCard": {
-        "title":"Title: this is a title",
-        "formattedText":"This is a basic card.  Text in a\n      basic card can include \"quotes\" and most other unicode characters\n      including emoji 📱.  Basic cards also support some markdown\n      formatting like *emphasis* or _italics_, **strong** or __bold__,\n      and ***bold itallic*** or ___strong emphasis___ as well as other things\n      like line  \nbreaks",
-        "subtitle":
-        "This is a subtitle",
-        "image": {
-          "url":"https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png",
-          "accessibilityText":"Image alternate text"
-        },
-        "buttons": [
-          {
-            "title":"This is a button",
-            "openUrlAction":{
-              "url":"https://assistant.google.com/"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "simpleResponse": {
-        "textToSpeech":"This is the 2nd simple response ",
-        "displayText":"This is the 2nd simple response"
-      }
-    }
-  ],
-  "suggestions":
-  [
-    {"title":"Basic Card"},
-    {"title":"List"},
-    {"title":"Carousel"},
-    {"title":"Suggestions"}
-  ]
-}
-}
-
+        "speech": speech,
+        "displayText": speech,
+        # "data": data,
+        # "contextOut": [],
+        "source": "apiai-weather-webhook-sample"
     }
 
 
@@ -82,3 +77,4 @@ if __name__ == '__main__':
     print("Starting app on port %d" % port)
 
     app.run(debug=False, port=port, host='0.0.0.0')
+
